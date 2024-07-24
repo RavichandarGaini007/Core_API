@@ -13,5 +13,6 @@ namespace Common.BusinessLogicLayer.Model
         public object Data { get; set; }
 
         public string Message { get; set; } = "Success";
+        public string Token { get; set; }
     }
 }

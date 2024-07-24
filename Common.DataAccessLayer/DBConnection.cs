@@ -24,6 +24,20 @@ namespace Common.DataAccessLayer
 
             //var connectionString = $"Server={hostname};Initial Catalog={database};User ID={user};Password={password};";
             var connectionString = _configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+            //connectionString = _configuration.GetSection("ConnectionStrings:Alkem_Common_Connection").Value;
+
+            return connectionString;
+        }
+
+        public string GetConnection(string db_name)
+        {
+            var connectionString = "";
+            if(string.IsNullOrEmpty(db_name))
+                connectionString = _configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+            else if (db_name.ToLower()== "alk_common")
+             connectionString = _configuration.GetSection("ConnectionStrings:Alkem_Common_Connection").Value;
+            else
+                connectionString = _configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
 
             return connectionString;
         }

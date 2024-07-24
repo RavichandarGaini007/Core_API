@@ -11,12 +11,12 @@ namespace Common.DataAccessLayer
 {
     public interface IDAL
     {
-        Task<GridReader> RunMultipleQueryAsync(string query, CommandType commandType,  DynamicParameters parameters = null);
-        Task<IEnumerable<T>> GetIEnumerableData<T>(string query, CommandType commandType,  DynamicParameters parameters = null, int timeOut = 30) where T : class;
-        Task<T> GetData<T>(string query, CommandType commandType,  DynamicParameters parameters = null) where T : class;
-        Task<int> ExecuteQuery(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null);
+        Task<GridReader> RunMultipleQueryAsync(string query, CommandType commandType,  DynamicParameters parameters = null, string conn_str = null);
+        Task<IEnumerable<T>> GetIEnumerableData<T>(string query, CommandType commandType,  DynamicParameters parameters = null,string conn_str=null, int timeOut = 30) where T : class;
+        Task<T> GetData<T>(string query, CommandType commandType,  DynamicParameters parameters = null, string conn_str = null) where T : class;
+        Task<int> ExecuteQuery(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null, string conn_str = null);
 
-        Task<int> GetScalarData(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null);
-        Task<string> GetScalarStringData(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null);
+        Task<int> GetScalarData(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null, string conn_str = null);
+        Task<string> GetScalarStringData(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null, string conn_str = null);
     }
 }

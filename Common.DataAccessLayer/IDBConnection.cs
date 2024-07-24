@@ -9,5 +9,6 @@ namespace Common.DataAccessLayer
     public interface IDBConnection
     {
         string GetConnection();
+        string GetConnection(string db_name);
     }
 }

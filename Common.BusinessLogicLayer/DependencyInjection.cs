@@ -15,6 +15,8 @@ namespace Common.BusinessLogicLayer
         public static IServiceCollection AddDBL(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddTransient<IUserServices, UserServices>();
+            services.AddTransient<IRPLServices, RPLServices>();
+            services.AddTransient<IPurchaseSaleService, PurchaseSaleService>();
             return services;
         }
     }
