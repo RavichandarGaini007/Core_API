@@ -17,6 +17,7 @@ namespace Common.BusinessLogicLayer
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IRPLServices, RPLServices>();
             services.AddTransient<IPurchaseSaleService, PurchaseSaleService>();
+            services.AddTransient<IViewCardService, ViewCardService>();
             return services;
         }
     }

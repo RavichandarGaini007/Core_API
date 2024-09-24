@@ -29,7 +29,7 @@ namespace Common.DataAccessLayer
         {
             using (var conn = GetConnection(conn_str))
             {
-                var queryResult = await conn.QueryMultipleAsync(query, parameters, commandType: commandType);
+                var queryResult = await conn.QueryMultipleAsync(query, parameters, commandType: commandType, commandTimeout:60);
                 return queryResult;
             }
         }
@@ -77,6 +77,86 @@ namespace Common.DataAccessLayer
                 var result = await conn.ExecuteAsync(query, parameters, commandType: commandType);
                 return result;
             }
+        }
+        public async Task<DataTable> GetDataTable<T>(string query, CommandType commandType, DynamicParameters parameters = null, string conn_str = null) where T : class
+        {
+            using (var conn = GetConnection(conn_str))
+            {
+                var result = await conn.QueryAsync(query, parameters, commandType: commandType);
+                return ConvertToDataTable(result);
+            }
+        }
+
+        public async Task<DataSet> GetDataSet<T>(string query, CommandType commandType, DynamicParameters parameters = null, string conn_str = null) where T : class
+        {
+            using (var conn = GetConnection(conn_str))
+            {
+                var result = await conn.QueryMultipleAsync(query, parameters, commandType: commandType);
+                return ConvertToDataSet(result);
+            }
+        }
+        private DataTable ConvertToDataTable(IEnumerable<dynamic> data)
+        {
+            DataTable dataTable = new DataTable();
+
+            if (data != null)
+            {
+                foreach (var item in data)
+                {
+                    if (dataTable.Columns.Count == 0)
+                    {
+                        foreach (var property in (IDictionary<string, object>)item)
+                        {
+                            dataTable.Columns.Add(property.Key, property.Value?.GetType() ?? typeof(object));
+                        }
+                    }
+
+                    DataRow row = dataTable.NewRow();
+                    foreach (var property in (IDictionary<string, object>)item)
+                    {
+                        row[property.Key] = property.Value ?? DBNull.Value;
+                    }
+                    dataTable.Rows.Add(row);
+                }
+            }
+
+
+            return dataTable;
+        }
+        private DataSet ConvertToDataSet(SqlMapper.GridReader multi)
+        {
+            DataSet dataSet = new DataSet();
+
+            while (!multi.IsConsumed)
+            {
+                var dataTable = new DataTable();
+
+                var data = multi.Read();
+                if (data == null || !data.AsList().Any())
+                {
+                    continue;
+                }
+
+                var firstRow = (IDictionary<string, object>)data.First();
+                foreach (var key in firstRow.Keys)
+                {
+                    dataTable.Columns.Add(key);
+                }
+
+                foreach (var row in data)
+                {
+                    var dataRow = dataTable.NewRow();
+                    foreach (var key in firstRow.Keys)
+                    {
+                        dataRow[key] = ((IDictionary<string, object>)row)[key] ?? DBNull.Value;
+                    }
+                    dataTable.Rows.Add(dataRow);
+                }
+
+                dataSet.Tables.Add(dataTable);
+            }
+
+            return dataSet;
         }
     }
 }

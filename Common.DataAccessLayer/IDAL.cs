@@ -18,5 +18,7 @@ namespace Common.DataAccessLayer
 
         Task<int> GetScalarData(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null, string conn_str = null);
         Task<string> GetScalarStringData(string query, CommandType commandType = CommandType.StoredProcedure,  DynamicParameters parameters = null, string conn_str = null);
+        Task<DataTable> GetDataTable<T>(string query, CommandType commandType, DynamicParameters parameters = null, string conn_str = null) where T : class;
+        Task<DataSet> GetDataSet<T>(string query, CommandType commandType, DynamicParameters parameters = null, string conn_str = null) where T : class;
     }
 }
