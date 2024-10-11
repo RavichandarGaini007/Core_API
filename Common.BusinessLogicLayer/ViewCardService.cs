@@ -62,7 +62,7 @@ namespace Common.BusinessLogicLayer
                 string key = _configuration.GetSection("EncryptionKey").Value ?? "Xhh09@tyu$#";
                 empcode = commonServices.DecryptString(empcode, key);
 
-               DynamicParameters queryParameters = new DynamicParameters();
+                DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@emp_code", empcode);
                 var response = await _idal.GetIEnumerableData<empDetails>("sp_get_employee_details", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sap_fgrn");
                 int flag = 1;

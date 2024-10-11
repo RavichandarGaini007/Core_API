@@ -20,7 +20,7 @@ namespace Common.BusinessLogicLayer
                     {
                         byte[] clearBytes = new byte[cipherBytes.Length];
                         int bytesDecrypted = cs.Read(clearBytes, 0, clearBytes.Length);
-                        return Encoding.Unicode.GetString(clearBytes, 0, bytesDecrypted);
+                        return Encoding.UTF8.GetString(clearBytes, 0, bytesDecrypted);
 
                     }
                 }
