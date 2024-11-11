@@ -60,7 +60,11 @@ namespace Common.BusinessLogicLayer
             try
             {
                 string key = _configuration.GetSection("EncryptionKey").Value ?? "Xhh09@tyu$#";
-                empcode = commonServices.DecryptString(empcode, key);
+                if (empcode.Length > 6)
+                {
+                    empcode = commonServices.DecryptString(empcode, key);
+                }
+               
 
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@emp_code", empcode);
@@ -101,7 +105,10 @@ namespace Common.BusinessLogicLayer
             try
             {
                 string key = _configuration.GetSection("EncryptionKey").Value ?? "Xhh09@tyu$#";
-                empcode = commonServices.DecryptString(empcode, key);
+                if (empcode.Length > 6)
+                {
+                    empcode = commonServices.DecryptString(empcode, key);
+                }
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@emp_code", empcode);
                 var brand_code = await _idal.GetIEnumerableData<brandCode>("sp_get_employee_brands", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sap_fgrn");
