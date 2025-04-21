@@ -161,7 +161,7 @@ namespace Login_API.Controllers
                     issuer: _config["Jwt:Issuer"],
                   audience: _config["Jwt:Issuer"],
                   claims: null,
-                  expires: DateTime.Now.AddMinutes(60),
+                  expires: DateTime.Now.AddMinutes(1),
                   signingCredentials: credentials);
 
                 var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);

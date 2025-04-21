@@ -18,6 +18,8 @@ namespace Common.BusinessLogicLayer
             services.AddTransient<IRPLServices, RPLServices>();
             services.AddTransient<IPurchaseSaleService, PurchaseSaleService>();
             services.AddTransient<IViewCardService, ViewCardService>();
+            services.AddTransient<ISalesServices, SalesServices>();
+            services.AddTransient<IDashboardServices, DashboardServices>();
             return services;
         }
     }
