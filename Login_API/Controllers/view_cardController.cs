@@ -40,6 +40,22 @@ namespace Login_API.Controllers
             return a;
         }
 
+        [HttpPost]
+        [Route("getGenericBrand")]
+        public async Task<ActionResult<ResponseModel>> generic_brand_Details()
+        {
+            var a = await _viewCardService.generic_brand_Details();
 
+            return a;
+        }
+
+        [HttpGet]
+        [Route("getinvoicepdf")]
+        public async Task<ActionResult<ResponseModel>> Get_Invoice_Pdf(string invoiceno)
+        {
+            var a = await _viewCardService.Get_Invoice_Pdf(invoiceno);
+
+            return a;
+        }
     }
 }

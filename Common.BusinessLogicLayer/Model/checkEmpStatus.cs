@@ -53,6 +53,8 @@ namespace Common.BusinessLogicLayer.Model
         public string brand_name { get; set; }
         public string product_name { get; set; }
         public string composition { get; set; }
+        public string imageurl { get; set; }
+        public string div_name { get; set; }
     }
     public class details
     {

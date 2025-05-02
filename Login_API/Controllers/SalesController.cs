@@ -2,6 +2,7 @@
 using Common.BusinessLogicLayer.IServices;
 using Common.BusinessLogicLayer.Model;
 using Login_API.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +24,8 @@ namespace Login_API.Controllers
             _salesServices = salesServices;
             _config = config;
         }
+
+        [Authorize]
         [HttpPost]
         [Route("salesdata")]
         public async Task<ActionResult<ResponseModel>> salesdata(salesComReqModel req)
@@ -31,6 +34,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("salesAchvdata")]
         public async Task<ActionResult<ResponseModel>> salesAchvdata(salesComReqModel req)
@@ -39,6 +43,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("SalesTblWidges")]
         public async Task<ActionResult<ResponseModel>> SalesTblWidges(salesComReqModel req)
@@ -47,6 +52,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("SalesTopPerformance")]
         public async Task<ActionResult<ResponseModel>> SalesTopPerformance(salesComReqModel req)
@@ -55,6 +61,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("SalesHierarchyDesg")]
         public async Task<ActionResult<ResponseModel>> SalesHierarchyDesg(salesComReqModel req)
@@ -63,6 +70,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("SalesDivHQ")]
         public async Task<ActionResult<ResponseModel>> SalesDivHQ(salesComReqModel req)
@@ -71,6 +79,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("SalesScData")]
         public async Task<ActionResult<ResponseModel>> SalesScData(salesComReqModel req)
@@ -79,6 +88,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("SalesEmpAllDesg")]
         public async Task<ActionResult<ResponseModel>> SalesEmpAllDesg(string strEmpCode)
@@ -87,6 +97,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        //[Authorize]
         [HttpGet]
         [Route("SalesDiv")]
         public async Task<ActionResult<ResponseModel>> SalesDiv(string strEmpCode)
@@ -95,6 +106,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("BrandPerfmnceData")]
         public async Task<ActionResult<ResponseModel>> BrandPerfmnceData(salesComReqModel req)
@@ -103,6 +115,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("DivHqReportData")]
         public async Task<ActionResult<ResponseModel>> DivHqReportData(salesComReqModel req)
@@ -111,6 +124,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("DivBrandReportData")]
         public async Task<ActionResult<ResponseModel>> DivBrandReportData(salesComReqModel req)
@@ -119,6 +133,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("DivPlantReportData")]
         public async Task<ActionResult<ResponseModel>> DivPlantReportData(salesComReqModel req)
@@ -127,6 +142,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("DivCustReportData")]
         public async Task<ActionResult<ResponseModel>> DivCustReportData(salesComReqModel req)
@@ -148,7 +164,7 @@ namespace Login_API.Controllers
             if (flag == true)
             {
                 var a = await _salesServices.LoginUser(_LoginModel.emailid, _LoginModel.password);
-                string token = getToken();
+                string token = getToken(_LoginModel.keepSignIn);
                 a.Token = token;
                 return Ok(a);
             }
@@ -163,6 +179,7 @@ namespace Login_API.Controllers
             }
         }
 
+        //[Authorize]
         [HttpPost]
         [Route("getDashboardMenus")]
         public async Task<ActionResult<ResponseModel>> getDashboardMenu(string empCode, string role)
@@ -171,7 +188,7 @@ namespace Login_API.Controllers
             return a;
         }
 
-        private string getToken()
+        private string getToken(bool keepSignIn)
         {
             try
             {
@@ -183,7 +200,7 @@ namespace Login_API.Controllers
                     issuer: _config["Jwt:Issuer"],
                   audience: _config["Jwt:Issuer"],
                   claims: null,
-                  expires: DateTime.Now.AddMinutes(60),
+                  expires: keepSignIn == true ? DateTime.Now.AddHours(24) : DateTime.Now.AddMinutes(15),
                   signingCredentials: credentials);
 
                 var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
