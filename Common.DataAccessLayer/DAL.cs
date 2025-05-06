@@ -33,7 +33,7 @@ namespace Common.DataAccessLayer
                 return queryResult;
             }
         }
-        public async Task<IEnumerable<T>> GetIEnumerableData<T>(string query, CommandType commandType,  DynamicParameters parameters = null,string conn_str=null, int timeOut = 60) where T : class
+        public async Task<IEnumerable<T>> GetIEnumerableData<T>(string query, CommandType commandType,  DynamicParameters parameters = null,string conn_str=null, int timeOut = 300) where T : class
         {
             using (var conn = GetConnection(conn_str))
             {
