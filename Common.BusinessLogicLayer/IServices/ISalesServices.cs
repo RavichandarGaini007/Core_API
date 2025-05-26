@@ -28,5 +28,8 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> LoginUser(string userName, string password);
         public Task<ResponseModel> getMenu(string empCode, string role);
 
+        public Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year);
+        public Task<ResponseModel> getFlatFilePrimarySales(string DownloadFor, string year, string empcode, string div, string brand_code);
+
     }
 }

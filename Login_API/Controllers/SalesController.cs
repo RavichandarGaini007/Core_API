@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ServiceReference1;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Text;
 
 namespace Login_API.Controllers
@@ -229,5 +230,54 @@ namespace Login_API.Controllers
             var a = await _salesServices.getProductReportData(req);
             return Ok(a);
         }
+        [HttpGet]
+        [Route("GetBrandCodeFromFlatFile")]
+        public async Task<ActionResult<ResponseModel>> GetBrandCodeFromFlatFile(string div, string year)
+        {
+            var a = await _salesServices.getBrandCodeFromFlatFile(div, year);
+            return Ok(a);
+        }
+
+        [HttpGet]
+        [Route("GetFlatFilePrimarySales")]
+        public async Task<ActionResult<ResponseModel>> GetFlatFilePrimarySales(string DownloadFor, string year, string empcode, string div, string brand_code)
+        {
+            var a = await _salesServices.getFlatFilePrimarySales(DownloadFor, year, empcode, div, brand_code);
+            return Ok(a);
+        }
+
+        [HttpGet("download")]
+        public async Task<IActionResult> DownloadFile(string fileName)
+        {
+            string ftpHost = _config["ftp:ftphost"];
+            string ftpUser = _config["ftp:ftpuser"];
+            string ftpPass = _config["ftp:ftppass"];
+            string ftpPath = fileName;
+
+            string localPath = Path.GetTempFileName(); // temp file on server
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpHost + ftpPath);
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+            request.Credentials = new NetworkCredential(ftpUser, ftpPass);
+            request.UsePassive = true;
+            request.UseBinary = true;
+            request.EnableSsl = false;
+
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            using (Stream responseStream = response.GetResponseStream())
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    memoryStream.Write(buffer, 0, bytesRead);
+                }
+
+                byte[] fileBytes = memoryStream.ToArray();
+                return File(fileBytes, "application/octet-stream", fileName);
+            }
+
+        }
     }
-}
+ }

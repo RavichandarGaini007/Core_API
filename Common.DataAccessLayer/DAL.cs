@@ -158,5 +158,39 @@ namespace Common.DataAccessLayer
 
             return dataSet;
         }
+
+        public async Task<List<Dictionary<string, object>>> GetDynamicResult(string storedProcName, CommandType commandType, DynamicParameters parameters, string conn_str)
+        {
+            var result = new List<Dictionary<string, object>>();
+
+            using (var conn = GetConnection(conn_str))
+            using (var command = new SqlCommand(storedProcName, conn))
+            {
+                command.CommandType = commandType;
+
+                foreach (var paramName in parameters.ParameterNames)
+                {
+                    var paramValue = parameters.Get<dynamic>(paramName);
+                    command.Parameters.AddWithValue(paramName, paramValue ?? DBNull.Value);
+                }
+
+                await conn.OpenAsync();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var row = new Dictionary<string, object>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        result.Add(row);
+                    }
+                }
+            }
+
+            return result;
+        }
+
     }
 }

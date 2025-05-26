@@ -4,6 +4,7 @@ using Common.DataAccessLayer;
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -604,5 +605,69 @@ namespace Common.BusinessLogicLayer
             //Task<IEnumerable<UserModel>> elist =  _idal.GetIEnumerableData<UserModel>("select * from Employee", CommandType.Text, dynamicParameters, 30);
             return responseModel;
         }
+
+        public async Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@div", div);
+                queryParameters.Add("@year", year);
+                var response = await _idal.GetIEnumerableData<BrandCodeFlatFile>("GetBrandCodeFromFlatFile", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "SAP_FGRN");
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ResponseModel> getFlatFilePrimarySales(string DownloadFor, string year, string empcode, string div, string brand_code)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@DownloadFor", DownloadFor);
+                queryParameters.Add("@year", year);
+                queryParameters.Add("@empcode", empcode);
+                queryParameters.Add("@div", div);
+                queryParameters.Add("@brandcode", brand_code);
+
+                var response = await _idal.GetDynamicResult(
+                           "GetFlatFileDataPrimarySales",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "SAP_FGRN"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
     }
 }
