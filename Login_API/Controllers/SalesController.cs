@@ -246,6 +246,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+
         [HttpGet("download")]
         public async Task<IActionResult> DownloadFile(string fileName)
         {
@@ -253,8 +254,6 @@ namespace Login_API.Controllers
             string ftpUser = _config["ftp:ftpuser"];
             string ftpPass = _config["ftp:ftppass"];
             string ftpPath = fileName;
-
-            string localPath = Path.GetTempFileName(); // temp file on server
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpHost + ftpPath);
             request.Method = WebRequestMethods.Ftp.DownloadFile;
@@ -279,5 +278,32 @@ namespace Login_API.Controllers
             }
 
         }
+
+        [HttpGet]
+        [Route("GetCustomize_tab_user")]
+        public async Task<ActionResult<ResponseModel>> getCustomize_tab_user(string userid)
+        {
+            var a = await _salesServices.getCustomize_tab_user(userid);
+            return Ok(a);
+        }
+
+        [HttpGet("GetFtpFileLastModifiedDateTime")]
+        public async Task<IActionResult> GetFtpFileLastModifiedDateTime(string fileName)
+        {
+            string ftpHost = _config["ftp:ftphost"];
+            string ftpUser = _config["ftp:ftpuser"];
+            string ftpPass = _config["ftp:ftppass"];
+
+            FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(ftpHost + fileName));
+            request.Proxy = null;
+            request.Credentials = new NetworkCredential(ftpUser, ftpPass);
+            request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+            DateTime LastModified = response.LastModified;
+            response.Close();
+            return Ok(Convert.ToString(LastModified));
+        }
+
+
     }
- }
+}

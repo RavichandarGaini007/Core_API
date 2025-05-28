@@ -669,5 +669,38 @@ namespace Common.BusinessLogicLayer
             }
         }
 
+        public async Task<ResponseModel> getCustomize_tab_user(string userid)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@userid", userid);
+
+                var response = await _idal.GetDynamicResult(
+                           "Customize_tab_user_s",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+
     }
 }
