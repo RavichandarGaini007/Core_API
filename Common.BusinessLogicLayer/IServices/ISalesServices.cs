@@ -32,5 +32,7 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> getFlatFilePrimarySales(string DownloadFor, string year, string empcode, string div, string brand_code);
         public Task<ResponseModel> getCustomize_tab_user(string userid);
 
+        public Task<ResponseModel> getFtpDetails(string Name);
+
     }
 }

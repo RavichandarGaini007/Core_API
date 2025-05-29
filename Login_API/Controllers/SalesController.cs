@@ -250,9 +250,12 @@ namespace Login_API.Controllers
         [HttpGet("download")]
         public async Task<IActionResult> DownloadFile(string fileName)
         {
-            string ftpHost = _config["ftp:ftphost"];
-            string ftpUser = _config["ftp:ftpuser"];
-            string ftpPass = _config["ftp:ftppass"];
+            var a = await _salesServices.getFtpDetails("Ftp_71_server");
+            var dataList = a.Data as List<Dictionary<string, object>>;
+            string ftpHost = Convert.ToString((dataList[0]?.TryGetValue("ftphost", out var h) == true) ? h : null);
+            string ftpUser = Convert.ToString((dataList[0]?.TryGetValue("ftpuser", out var u) == true) ? u : null);
+            string ftpPass = Convert.ToString((dataList[0]?.TryGetValue("ftppwd", out var p) == true) ? p : null);
+
             string ftpPath = fileName;
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpHost + ftpPath);
@@ -276,6 +279,7 @@ namespace Login_API.Controllers
                 byte[] fileBytes = memoryStream.ToArray();
                 return File(fileBytes, "application/octet-stream", fileName);
             }
+        
 
         }
 
@@ -290,18 +294,30 @@ namespace Login_API.Controllers
         [HttpGet("GetFtpFileLastModifiedDateTime")]
         public async Task<IActionResult> GetFtpFileLastModifiedDateTime(string fileName)
         {
-            string ftpHost = _config["ftp:ftphost"];
-            string ftpUser = _config["ftp:ftpuser"];
-            string ftpPass = _config["ftp:ftppass"];
+            var a = await _salesServices.getFtpDetails("Ftp_71_server");
+            string Result="";
+            var dataList = a.Data as List<Dictionary<string, object>>;
+            if (dataList.Count == 1)
+            {
+                string ftpHost = Convert.ToString((dataList[0]?.TryGetValue("ftphost", out var h) == true) ? h : null);
+                string ftpUser = Convert.ToString((dataList[0]?.TryGetValue("ftpuser", out var u) == true) ? u : null);
+                string ftpPass = Convert.ToString((dataList[0]?.TryGetValue("ftppwd", out var p) == true) ? p : null);
 
-            FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(ftpHost + fileName));
-            request.Proxy = null;
-            request.Credentials = new NetworkCredential(ftpUser, ftpPass);
-            request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-            DateTime LastModified = response.LastModified;
-            response.Close();
-            return Ok(Convert.ToString(LastModified));
+                FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(ftpHost + fileName));
+                request.Proxy = null;
+                request.Credentials = new NetworkCredential(ftpUser, ftpPass);
+                request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                Result =Convert.ToString(response.LastModified);
+                response.Close();
+                
+            }
+            else
+            {
+                Result = "Ftp Configuration not found";
+            }
+
+            return Ok(Convert.ToString(Result));
         }
 
 
