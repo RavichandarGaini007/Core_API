@@ -3,13 +3,17 @@ using Common.BusinessLogicLayer.IServices;
 using Common.BusinessLogicLayer.Model;
 using Login_API.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using ServiceReference1;
+using ServiceReference2;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
+using System.Web;
 
 namespace Login_API.Controllers
 {
@@ -165,8 +169,17 @@ namespace Login_API.Controllers
             if (flag == true)
             {
                 var a = await _salesServices.LoginUser(_LoginModel.emailid, _LoginModel.password);
+                var dataList = a.Data as List<salesLoginModel>;
+                string userid = Convert.ToString((dataList[0]?.userid != "" ) ? dataList[0]?.userid : null);
+                string emaild = Convert.ToString((dataList[0]?.emailid != "") ? dataList[0]?.emailid : null);
                 string token = getToken(_LoginModel.keepSignIn);
                 a.Token = token;
+                encryption_webSoapClient ws_login = new encryption_webSoapClient(encryption_webSoapClient.EndpointConfiguration.encryption_webSoap);
+                var strEmaiilencrypt = await ws_login.EncryptAsync(emaild, userid);
+                var struserEncryp = await ws_login.EncryptAsync(userid, userid);
+                a.EmailKeyEncrypted = HttpUtility.UrlEncode(strEmaiilencrypt);
+                a.UserKeyEncrypted = HttpUtility.UrlEncode(struserEncryp);
+
                 return Ok(a);
             }
             else
@@ -320,6 +333,14 @@ namespace Login_API.Controllers
             return Ok(Convert.ToString(Result));
         }
 
+        [HttpGet("GetEncryptAndEncodeVal")]
+        public async Task<IActionResult> GetEncryptAndEncodeVal(string value,string key)
+        {
+            encryption_webSoapClient ws_login=new encryption_webSoapClient(encryption_webSoapClient.EndpointConfiguration.encryption_webSoap);
+            var Result =await ws_login.EncryptAsync(value, key);
+            var enclodeval = HttpUtility.UrlEncode(Result);
+            return Ok(Convert.ToString(enclodeval));
+        }
 
     }
 }
