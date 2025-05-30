@@ -174,12 +174,15 @@ namespace Login_API.Controllers
                 string emaild = Convert.ToString((dataList[0]?.emailid != "") ? dataList[0]?.emailid : null);
                 string token = getToken(_LoginModel.keepSignIn);
                 a.Token = token;
+
                 encryption_webSoapClient ws_login = new encryption_webSoapClient(encryption_webSoapClient.EndpointConfiguration.encryption_webSoap);
                 var strEmaiilencrypt = await ws_login.EncryptAsync(emaild, userid);
                 var struserEncryp = await ws_login.EncryptAsync(userid, userid);
+                var strEmailEncryptionString = await ws_login.EncryptStringAsync(emaild);
+
                 a.EmailKeyEncrypted = HttpUtility.UrlEncode(strEmaiilencrypt);
                 a.UserKeyEncrypted = HttpUtility.UrlEncode(struserEncryp);
-
+                a.EmailEncryptionString = strEmailEncryptionString;
                 return Ok(a);
             }
             else
