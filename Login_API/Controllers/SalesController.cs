@@ -246,6 +246,8 @@ namespace Login_API.Controllers
             var a = await _salesServices.getProductReportData(req);
             return Ok(a);
         }
+
+        [Authorize]
         [HttpGet]
         [Route("GetBrandCodeFromFlatFile")]
         public async Task<ActionResult<ResponseModel>> GetBrandCodeFromFlatFile(string div, string year)
@@ -254,6 +256,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetFlatFilePrimarySales")]
         public async Task<ActionResult<ResponseModel>> GetFlatFilePrimarySales(string DownloadFor, string year, string empcode, string div, string brand_code)
@@ -262,7 +265,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
-
+        [Authorize]
         [HttpGet("download")]
         public async Task<IActionResult> DownloadFile(string fileName)
         {
@@ -299,6 +302,7 @@ namespace Login_API.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetCustomize_tab_user")]
         public async Task<ActionResult<ResponseModel>> getCustomize_tab_user(string userid)
@@ -307,6 +311,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
         [HttpGet("GetFtpFileLastModifiedDateTime")]
         public async Task<IActionResult> GetFtpFileLastModifiedDateTime(string fileName)
         {
@@ -336,6 +341,7 @@ namespace Login_API.Controllers
             return Ok(Convert.ToString(Result));
         }
 
+        [Authorize]
         [HttpGet("GetEncryptAndEncodeVal")]
         public async Task<IActionResult> GetEncryptAndEncodeVal(string value,string key)
         {
@@ -343,6 +349,25 @@ namespace Login_API.Controllers
             var Result =await ws_login.EncryptAsync(value, key);
             var enclodeval = HttpUtility.UrlEncode(Result);
             return Ok(Convert.ToString(enclodeval));
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetDesGetDesgEmp")]
+        public async Task<ActionResult<ResponseModel>> GetDesGetDesgEmp(string division, string userid, string flag, string designation, string accesstype)
+        {
+            string strdesignation = "";
+            string straccesstype = "";
+            if (designation == "null" || designation == "undefined")
+                strdesignation = "";
+            else
+                strdesignation = designation;
+            if (accesstype == "null" || accesstype == "undefined")
+                straccesstype = "";
+            else
+                straccesstype = accesstype;
+            var a = await _salesServices.GetDesGetDesgEmp(division, userid, flag, strdesignation, straccesstype);
+            return Ok(a);
         }
 
     }

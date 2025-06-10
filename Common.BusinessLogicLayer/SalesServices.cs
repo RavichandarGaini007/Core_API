@@ -733,5 +733,43 @@ namespace Common.BusinessLogicLayer
             }
         }
 
+        public async Task<ResponseModel> GetDesGetDesgEmp(string division,string userid,string flag,string designation,string accesstype)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@ddldivision_value", division);
+                queryParameters.Add("@empCode", userid);
+                queryParameters.Add("@flag", flag);
+                queryParameters.Add("@designation", designation);
+                queryParameters.Add("@strAccessType", accesstype);
+
+
+                var response = await _idal.GetDynamicResult(
+                           "Proc_fill_Desg_Mis_Emp",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+
     }
 }

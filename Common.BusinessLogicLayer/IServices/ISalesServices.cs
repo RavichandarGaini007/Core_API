@@ -33,6 +33,7 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> getCustomize_tab_user(string userid);
 
         public Task<ResponseModel> getFtpDetails(string Name);
+        public Task<ResponseModel> GetDesGetDesgEmp(string division, string userid, string flag, string designation, string accesstype);
 
     }
 }
