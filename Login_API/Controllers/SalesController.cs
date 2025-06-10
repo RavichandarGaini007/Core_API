@@ -266,8 +266,9 @@ namespace Login_API.Controllers
         }
 
         [Authorize]
-        [HttpGet("download")]
-        public async Task<IActionResult> DownloadFile(string fileName)
+        [HttpGet]
+        [Route("download")]
+        public async Task<ActionResult<ResponseModel>> DownloadFile(string fileName)
         {
             var a = await _salesServices.getFtpDetails("Ftp_71_server");
             var dataList = a.Data as List<Dictionary<string, object>>;
@@ -276,7 +277,7 @@ namespace Login_API.Controllers
             string ftpPass = Convert.ToString((dataList[0]?.TryGetValue("ftppwd", out var p) == true) ? p : null);
 
             string ftpPath = fileName;
-
+            byte[] fileBytes;
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpHost + ftpPath);
             request.Method = WebRequestMethods.Ftp.DownloadFile;
             request.Credentials = new NetworkCredential(ftpUser, ftpPass);
@@ -294,11 +295,29 @@ namespace Login_API.Controllers
                 {
                     memoryStream.Write(buffer, 0, bytesRead);
                 }
-
-                byte[] fileBytes = memoryStream.ToArray();
-                return File(fileBytes, "application/octet-stream", fileName);
+                fileBytes = memoryStream.ToArray();
+               // return File(fileBytes, "application/octet-stream", fileName);
             }
-        
+
+            if(fileBytes.Length > 0)
+            {
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = fileBytes,
+                    Message = "success"
+                };
+            }
+            else
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = fileBytes,
+                    Message = "Data not found"
+                };
+            }
+               
 
         }
 
@@ -313,10 +332,11 @@ namespace Login_API.Controllers
 
         [Authorize]
         [HttpGet("GetFtpFileLastModifiedDateTime")]
-        public async Task<IActionResult> GetFtpFileLastModifiedDateTime(string fileName)
+        public async Task<ActionResult<ResponseModel>> GetFtpFileLastModifiedDateTime(string fileName)
         {
             var a = await _salesServices.getFtpDetails("Ftp_71_server");
             string Result="";
+            bool bFound=false;
             var dataList = a.Data as List<Dictionary<string, object>>;
             if (dataList.Count == 1)
             {
@@ -329,16 +349,35 @@ namespace Login_API.Controllers
                 request.Credentials = new NetworkCredential(ftpUser, ftpPass);
                 request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
                 FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
                 Result =Convert.ToString(response.LastModified);
+                bFound = true;
                 response.Close();
-                
             }
             else
             {
                 Result = "Ftp Configuration not found";
             }
-
-            return Ok(Convert.ToString(Result));
+            if (bFound)
+            {
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = Result,
+                    Message = "success"
+                };
+            }
+            else
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = Result,
+                    Message = "Error" + Result
+                };
+            }
+               
+        
         }
 
         [Authorize]
