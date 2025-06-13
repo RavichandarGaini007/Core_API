@@ -57,5 +57,13 @@ namespace Login_API.Controllers
 
             return a;
         }
+
+        [HttpPost]
+        [Route("GetbrandhospitalProduct")]
+        public async Task<ActionResult<ResponseModel>> GetbrandhospitalProduct()
+        {
+            var a = await _viewCardService.GetbrandhospitalProduct();
+            return a;
+        }
     }
 }

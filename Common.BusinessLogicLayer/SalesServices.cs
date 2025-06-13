@@ -770,6 +770,39 @@ namespace Common.BusinessLogicLayer
             }
         }
 
+        public async Task<ResponseModel> NetworkWiseProductSale_S(string div)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@div", div);
+
+                var response = await _idal.GetDynamicResult(
+                           "NetworkWiseProductSale_S",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sap_fgrn"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+
 
     }
 }

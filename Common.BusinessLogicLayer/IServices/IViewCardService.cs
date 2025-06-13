@@ -14,5 +14,6 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> brand_details(string empcode);
         public Task<ResponseModel> generic_brand_Details();
         public Task<ResponseModel> Get_Invoice_Pdf(string invoiceno);
+        public Task<ResponseModel> GetbrandhospitalProduct();
     }
 }

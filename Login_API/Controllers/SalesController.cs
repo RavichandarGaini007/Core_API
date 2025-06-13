@@ -409,5 +409,14 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("NetworkWiseProductSale_S")]
+        public async Task<ActionResult<ResponseModel>> NetworkWiseProductSale_S(string div)
+        {
+            var a = await _salesServices.NetworkWiseProductSale_S(div);
+            return Ok(a);
+        }
+
     }
 }

@@ -38,6 +38,8 @@ namespace Common.DataAccessLayer
              connectionString = _configuration.GetSection("ConnectionStrings:Alkem_Common_Connection").Value;
             else if (db_name.ToLower() == "sap_fgrn")
                 connectionString = _configuration.GetSection("ConnectionStrings:sap_fgrn_Connection").Value;
+            else if (db_name.ToLower() == "sap_fgrn_64")
+                connectionString = _configuration.GetSection("ConnectionStrings:sap_fgrn_Connection_64").Value;
             else if (db_name.ToLower() == "lottery")
                 connectionString = _configuration.GetSection("ConnectionStrings:lottery_Connection").Value;
             else

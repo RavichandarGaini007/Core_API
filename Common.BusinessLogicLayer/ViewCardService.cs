@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -273,6 +274,60 @@ namespace Common.BusinessLogicLayer
 
             //Task<IEnumerable<UserModel>> elist =  _idal.GetIEnumerableData<UserModel>("select * from Employee", CommandType.Text, dynamicParameters, 30);
             return responseModel;
+        }
+
+
+        public async Task<ResponseModel> GetbrandhospitalProduct()
+        {
+
+            try
+            {
+              
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@category", "brand");
+
+                DynamicParameters queryParametersd = new DynamicParameters();
+                queryParametersd.Add("@category", "branddetails");
+                var brand_code = await _idal.GetIEnumerableData<brandCode>("get_employee_brand_hospital", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sap_fgrn_64");
+                var brand_details = await _idal.GetIEnumerableData<brandDetails>("get_employee_brand_hospital", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParametersd, conn_str: "sap_fgrn_64");
+
+                var response = (from code in brand_code
+                                join details in brand_details
+                                on code.brand_code equals details.brand_code
+                                group details by new { code.brand_code, code.brand_name, code.imageurl,code.division } into brandGroup
+                                select new final_brand_details
+                                {
+                                    brand = brandGroup.Key.brand_name,
+                                    imageurl = brandGroup.Key.imageurl,
+                                    division=brandGroup.Key.division,
+                                    products = brandGroup.Select(p => new list_products
+                                    {
+                                        product_name = p.product_name,
+                                        composition = p.composition
+                                    }).ToList()
+                                }).ToList();
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            //Task<IEnumerable<UserModel>> elist =  _idal.GetIEnumerableData<UserModel>("select * from Employee", CommandType.Text, dynamicParameters, 30);
+            return responseModel;
+
         }
     }
 }

@@ -35,5 +35,7 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> getFtpDetails(string Name);
         public Task<ResponseModel> GetDesGetDesgEmp(string division, string userid, string flag, string designation, string accesstype);
 
+        public Task<ResponseModel> NetworkWiseProductSale_S(string div);
+
     }
 }

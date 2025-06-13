@@ -46,6 +46,7 @@ namespace Common.BusinessLogicLayer.Model
         public string brand_code { get; set; }
         public string brand_name { get; set; }
         public string imageurl { get; set; }
+        public string division { get; set; }
     }
     public class brandDetails
     {
@@ -66,6 +67,8 @@ namespace Common.BusinessLogicLayer.Model
     {
         public string brand { get; set; }
         public string imageurl { get; set; }
+
+        public string division { get; set; }
         public List<list_products> products { get; set; }
     }
     public class list_products
