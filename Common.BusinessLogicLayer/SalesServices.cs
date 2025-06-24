@@ -162,6 +162,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@month", req.month);
                 queryParameters.Add("@year", req.year);
                 queryParameters.Add("@desg", req.desg);
+                queryParameters.Add("@ename", req.ename);
 
                 var response = await _idal.GetIEnumerableData<salesHierarchyRes>("proc_HierarchyWise_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
 
@@ -347,6 +348,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@hq", req.hq);
                 queryParameters.Add("@region", req.region);
                 queryParameters.Add("@mis", req.mis);
+                queryParameters.Add("@ename", req.ename);
 
                 var response = await _idal.GetIEnumerableData<sales_popup_Hqwiseres>("proc_Div_Hq_popSale_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
 
@@ -380,6 +382,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@month", req.month);
                 queryParameters.Add("@year", req.year);
                 queryParameters.Add("@mis", req.mis);
+                queryParameters.Add("@ename", req.ename);
 
                 var response = await _idal.GetIEnumerableData<sales_popup_brandwiseres>("proc_brand_popSale_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
 
@@ -447,7 +450,8 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@year", req.year);
                 queryParameters.Add("@plant", req.plant);
                 queryParameters.Add("@hq", req.hq);
-                
+                queryParameters.Add("@ename", req.ename);
+
                 var response = await _idal.GetIEnumerableData<sales_custwiseReportRes>("proc_custReportSales_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
 
                 return new ResponseModel
@@ -478,6 +482,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@empcode", req.empcode);
                 queryParameters.Add("@div", req.div);
                 queryParameters.Add("@brand", req.brand);
+                queryParameters.Add("@ename", req.ename);
 
                 var response = await _idal.GetIEnumerableData<sales_regionwiseRes>("proc_regionsalesreport_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
 
