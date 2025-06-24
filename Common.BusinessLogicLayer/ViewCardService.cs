@@ -62,7 +62,7 @@ namespace Common.BusinessLogicLayer
             try
             {
                 string key = _configuration.GetSection("EncryptionKey").Value ?? "Xhh09@tyu$#";
-                if (empcode.Length > 6)
+                if (empcode.Length > 8)
                 {
                     empcode = commonServices.DecryptString(empcode, key);
                 }
@@ -107,7 +107,7 @@ namespace Common.BusinessLogicLayer
             try
             {
                 string key = _configuration.GetSection("EncryptionKey").Value ?? "Xhh09@tyu$#";
-                if (empcode.Length > 6)
+                if (empcode.Length > 8)
                 {
                     empcode = commonServices.DecryptString(empcode, key);
                 }
