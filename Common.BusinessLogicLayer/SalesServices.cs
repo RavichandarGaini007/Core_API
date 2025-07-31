@@ -606,15 +606,23 @@ namespace Common.BusinessLogicLayer
             return responseModel;
         }
 
-        public async Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year)
+        public async Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year,string screencode,string fieldname, string brandcode,string userid)
         {
             try
             {
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@div", div);
                 queryParameters.Add("@year", year);
-                var response = await _idal.GetIEnumerableData<BrandCodeFlatFile>("GetBrandCodeFromFlatFile", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "SAP_FGRN");
-
+                queryParameters.Add("@screencode", screencode);
+                queryParameters.Add("@fieldname", fieldname);
+                queryParameters.Add("@brandcode", brandcode);
+                queryParameters.Add("@userid", userid);
+                var response = await _idal.GetDynamicResult(
+                     "GetDropDownList",
+                     commandType: CommandType.StoredProcedure,
+                     parameters: queryParameters,
+                     conn_str: "SAP_FGRN"
+                 );
                 return new ResponseModel
                 {
                     Code = 1,
@@ -770,15 +778,34 @@ namespace Common.BusinessLogicLayer
             }
         }
 
-        public async Task<ResponseModel> NetworkWiseProductSale_S(string div)
+        public async Task<ResponseModel> NetworkWiseProductSale_S(string div,string desg, string Misdesc, string plant, string brand, string product, string month, string year,string type)
         {
             try
             {
+
+                string spname = "";
+                if (type == "quarterwise")
+                {
+                    spname = "NetworkWiseProductSale_Qtr_S";
+                }
+                else
+                {
+                    spname = "NetworkWiseProductSale_S";
+                }
+
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@div", div);
+                queryParameters.Add("@desg", desg);
+                queryParameters.Add("@Misdesc", Misdesc);
+                queryParameters.Add("@plant", plant);
+                queryParameters.Add("@brand", brand);
+                queryParameters.Add("@product", product);
+                queryParameters.Add("@month", month);
+                queryParameters.Add("@year", year);
+                
 
                 var response = await _idal.GetDynamicResult(
-                           "NetworkWiseProductSale_S",
+                           spname,
                            commandType: CommandType.StoredProcedure,
                            parameters: queryParameters,
                            conn_str: "sap_fgrn"

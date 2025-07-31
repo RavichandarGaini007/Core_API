@@ -250,9 +250,9 @@ namespace Login_API.Controllers
         [Authorize]
         [HttpGet]
         [Route("GetBrandCodeFromFlatFile")]
-        public async Task<ActionResult<ResponseModel>> GetBrandCodeFromFlatFile(string div, string year)
+        public async Task<ActionResult<ResponseModel>> GetBrandCodeFromFlatFile(string div, string year, string screencode,string fieldname, string? brandcode,string? userid)
         {
-            var a = await _salesServices.getBrandCodeFromFlatFile(div, year);
+            var a = await _salesServices.getBrandCodeFromFlatFile(div, year, screencode, fieldname, brandcode, userid);
             return Ok(a);
         }
 
@@ -412,9 +412,9 @@ namespace Login_API.Controllers
         [Authorize]
         [HttpGet]
         [Route("NetworkWiseProductSale_S")]
-        public async Task<ActionResult<ResponseModel>> NetworkWiseProductSale_S(string div)
+        public async Task<ActionResult<ResponseModel>> NetworkWiseProductSale_S(string div, string? desg, string? Misdesc, string? plant, string? brand, string? product, string month, string year, string? type)
         {
-            var a = await _salesServices.NetworkWiseProductSale_S(div);
+            var a = await _salesServices.NetworkWiseProductSale_S(div,  desg,  Misdesc,  plant,  brand,  product,  month,  year, type);
             return Ok(a);
         }
 
