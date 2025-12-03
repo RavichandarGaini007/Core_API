@@ -21,6 +21,8 @@ namespace Common.BusinessLogicLayer.Model
         public string empname { get; set; }
         public string emailid { get; set; }
         public string mobileno { get; set; }
+        public string company { get; set; }
+        public string address { get; set; }
         public byte[] profileimage { get; set; }
         // Property to return the image as a Base64 URL string
         public string userprofile
