@@ -42,9 +42,9 @@ namespace Login_API.Controllers
 
         [HttpPost]
         [Route("getGenericBrand")]
-        public async Task<ActionResult<ResponseModel>> generic_brand_Details()
+        public async Task<ActionResult<ResponseModel>> generic_brand_Details(string? type)
         {
-            var a = await _viewCardService.generic_brand_Details();
+            var a = await _viewCardService.generic_brand_Details(type);
 
             return a;
         }

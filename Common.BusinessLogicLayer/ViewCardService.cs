@@ -152,26 +152,24 @@ namespace Common.BusinessLogicLayer
             //Task<IEnumerable<UserModel>> elist =  _idal.GetIEnumerableData<UserModel>("select * from Employee", CommandType.Text, dynamicParameters, 30);
             return responseModel;
         }
-        public async Task<ResponseModel> generic_brand_Details()
+        public async Task<ResponseModel> generic_brand_Details(string type)
         {
             try
             {
                 string key = _configuration.GetSection("EncryptionKey").Value ?? "Xhh09@tyu$#";
                 DynamicParameters queryParameters = new DynamicParameters();
-                var brandDetailsList = await _idal.GetIEnumerableData<brandDetails>("sp_get_generic_brand", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sap_fgrn");
 
-                //var response = brandDetailsList
-                //    .GroupBy(b => new { b.brand_code, b.brand_name, b.imageurl })
-                //    .Select(g => new final_brand_details
-                //    {
-                //        brand = g.Key.brand_name,
-                //        imageurl = g.Key.imageurl,
-                //        products = g.Select(p => new list_products
-                //        {
-                //            product_name = p.product_name,
-                //            composition = p.composition
-                //        }).ToList()
-                //    }).ToList();
+                if (!string.IsNullOrEmpty(type) && type != null)
+                {
+                    queryParameters.Add("@Type", type);
+                }
+
+                var brandDetailsList = await _idal.GetDynamicResult(
+                              "sp_get_generic_brand",
+                              commandType: CommandType.StoredProcedure,
+                              parameters: queryParameters,
+                              conn_str: "sap_fgrn"
+                          );
 
                 return new ResponseModel
                 {
@@ -179,6 +177,7 @@ namespace Common.BusinessLogicLayer
                     Data = brandDetailsList,
                     Message = "Success"
                 };
+
             }
             catch (Exception ex)
             {
