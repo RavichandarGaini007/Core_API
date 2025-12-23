@@ -611,15 +611,23 @@ namespace Common.BusinessLogicLayer
             return responseModel;
         }
 
-        public async Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year)
+        public async Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year,string screencode,string fieldname, string brandcode,string userid)
         {
             try
             {
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@div", div);
                 queryParameters.Add("@year", year);
-                var response = await _idal.GetIEnumerableData<BrandCodeFlatFile>("GetBrandCodeFromFlatFile", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "SAP_FGRN");
-
+                queryParameters.Add("@screencode", screencode);
+                queryParameters.Add("@fieldname", fieldname);
+                queryParameters.Add("@brandcode", brandcode);
+                queryParameters.Add("@userid", userid);
+                var response = await _idal.GetDynamicResult(
+                     "GetDropDownList",
+                     commandType: CommandType.StoredProcedure,
+                     parameters: queryParameters,
+                     conn_str: "SAP_FGRN"
+                 );
                 return new ResponseModel
                 {
                     Code = 1,
@@ -673,6 +681,160 @@ namespace Common.BusinessLogicLayer
                 };
             }
         }
+
+        public async Task<ResponseModel> getCustomize_tab_user(string userid)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@userid", userid);
+
+                var response = await _idal.GetDynamicResult(
+                           "Customize_tab_user_s",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ResponseModel> getFtpDetails(string name)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@name", name);
+
+                var response = await _idal.GetDynamicResult(
+                           "ftpdetails_s",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ResponseModel> GetDesGetDesgEmp(string division,string userid,string flag,string designation,string accesstype)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@ddldivision_value", division);
+                queryParameters.Add("@empCode", userid);
+                queryParameters.Add("@flag", flag);
+                queryParameters.Add("@designation", designation);
+                queryParameters.Add("@strAccessType", accesstype);
+
+
+                var response = await _idal.GetDynamicResult(
+                           "Proc_fill_Desg_Mis_Emp",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ResponseModel> NetworkWiseProductSale_S(string div,string desg, string Misdesc, string plant, string brand, string product, string month, string year,string type)
+        {
+            try
+            {
+
+                string spname = "";
+                if (type == "quarterwise")
+                {
+                    spname = "NetworkWiseProductSale_Qtr_S";
+                }
+                else
+                {
+                    spname = "NetworkWiseProductSale_S";
+                }
+
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@div", div);
+                queryParameters.Add("@desg", desg);
+                queryParameters.Add("@Misdesc", Misdesc);
+                queryParameters.Add("@plant", plant);
+                queryParameters.Add("@brand", brand);
+                queryParameters.Add("@product", product);
+                queryParameters.Add("@month", month);
+                queryParameters.Add("@year", year);
+                
+
+                var response = await _idal.GetDynamicResult(
+                           spname,
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sap_fgrn"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
+
 
     }
 }

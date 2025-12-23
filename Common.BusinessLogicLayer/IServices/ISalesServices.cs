@@ -28,8 +28,14 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> LoginUser(string userName, string password);
         public Task<ResponseModel> getMenu(string empCode, string role);
 
-        public Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year);
+        public Task<ResponseModel> getBrandCodeFromFlatFile(string div, string year, string screencode,string fieldname, string brandcode,string userid);
         public Task<ResponseModel> getFlatFilePrimarySales(string DownloadFor, string year, string empcode, string div, string brand_code);
+        public Task<ResponseModel> getCustomize_tab_user(string userid);
+
+        public Task<ResponseModel> getFtpDetails(string Name);
+        public Task<ResponseModel> GetDesGetDesgEmp(string division, string userid, string flag, string designation, string accesstype);
+
+        public Task<ResponseModel> NetworkWiseProductSale_S(string div, string desg, string Misdesc, string plant, string brand, string product, string month, string year, string type);
 
     }
 }
