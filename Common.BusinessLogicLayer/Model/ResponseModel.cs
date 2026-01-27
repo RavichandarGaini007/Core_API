@@ -14,6 +14,7 @@ namespace Common.BusinessLogicLayer.Model
 
         public string Message { get; set; } = "Success";
         public string Token { get; set; }
+        public string RefreshToken { get; set; }
         public string EmailKeyEncrypted { get; set; }
         public string UserKeyEncrypted { get; set; }
         public string EmailEncryptionString { get; set; }

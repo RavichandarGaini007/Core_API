@@ -20,6 +20,7 @@ namespace Common.BusinessLogicLayer
             services.AddTransient<IViewCardService, ViewCardService>();
             services.AddTransient<ISalesServices, SalesServices>();
             services.AddTransient<IDashboardServices, DashboardServices>();
+            services.AddTransient<ICommonServices, CommonServices>();
             return services;
         }
     }

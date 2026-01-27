@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ServiceReference1;
+using ServiceReference2;
 using System.IdentityModel.Tokens.Jwt;
 using System.Numerics;
 using System.Reflection.Emit;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Login_API.Controllers
@@ -89,8 +92,12 @@ namespace Login_API.Controllers
         public async Task<ActionResult<ResponseModel>> LoginUser(_loginModel _LoginModel)
         {
             Login_webserviceSoapClient login_WebserviceSoapClient = new Login_webserviceSoapClient(Login_webserviceSoapClient.EndpointConfiguration.Login_webserviceSoap);
+            encryption_webSoapClient encryption_WebserviceSoapClient = new encryption_webSoapClient(encryption_webSoapClient.EndpointConfiguration.encryption_webSoap);
+
             //var flag = await login_WebserviceSoapClient.Check_loginAsync("kalpesh.ayare@alkem.com", "Values@@2022");
+            
             var flag = await login_WebserviceSoapClient.Check_loginAsync(_LoginModel.emailid, _LoginModel.password);
+
             if (_LoginModel.password == "demand")
             {
                 flag = true;
@@ -99,7 +106,18 @@ namespace Login_API.Controllers
             {
                 var a = await _userServices.LoginUser(_LoginModel.emailid, _LoginModel.password);
                 string token = getToken();
-                a.Token= token;
+                var refreshToken = CreateRefreshToken();
+                a.Token = token;
+                a.RefreshToken = refreshToken;
+
+                Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(1)
+                });
+
                 return Ok(a);
             }
             else
@@ -129,7 +147,7 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
-       
+
         [HttpPost]
         [Route("userEmailId")]
         public async Task<ActionResult<ResponseModel>> userEmailId(string user_id)
@@ -149,11 +167,11 @@ namespace Login_API.Controllers
                 };
             }
         }
+        
         private string getToken()
         {
             try
             {
-
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -161,7 +179,7 @@ namespace Login_API.Controllers
                     issuer: _config["Jwt:Issuer"],
                   audience: _config["Jwt:Issuer"],
                   claims: null,
-                  expires: DateTime.Now.AddMinutes(1),
+                  expires: DateTime.Now.AddMinutes(5),
                   signingCredentials: credentials);
 
                 var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
@@ -174,6 +192,31 @@ namespace Login_API.Controllers
             }
         }
 
+        private string CreateRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> refreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (refreshToken == null)
+                return Unauthorized();
+
+            var newAccessToken = getToken();
+            var newRefreshToken = CreateRefreshToken();
+
+            Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(1)
+            });
+
+            return Ok(new { accessToken = newAccessToken });
+        }
 
     }
 }

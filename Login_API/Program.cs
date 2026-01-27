@@ -1,4 +1,4 @@
-
+﻿
 using Common.BusinessLogicLayer;
 using Common.DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,6 +78,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  });
 //Jwt configuration ends here
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000") // 👈 EXACT origin
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // 👈 REQUIRED
+    });
+});
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -90,10 +104,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
-app.UseCors(x => x
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
+app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
 app.UseAuthorization();

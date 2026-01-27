@@ -12,6 +12,7 @@ using ServiceReference1;
 using ServiceReference2;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 
@@ -173,7 +174,17 @@ namespace Login_API.Controllers
                 string userid = Convert.ToString((dataList[0]?.userid != "" ) ? dataList[0]?.userid : null);
                 string emaild = Convert.ToString((dataList[0]?.emailid != "") ? dataList[0]?.emailid : null);
                 string token = getToken(_LoginModel.keepSignIn);
+                var refreshToken = CreateRefreshToken();
                 a.Token = token;
+                a.RefreshToken = refreshToken;
+
+                Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(1)
+                });
 
                 encryption_webSoapClient ws_login = new encryption_webSoapClient(encryption_webSoapClient.EndpointConfiguration.encryption_webSoap);
                 var strEmaiilencrypt = await ws_login.EncryptAsync(emaild, userid);
@@ -217,7 +228,7 @@ namespace Login_API.Controllers
                     issuer: _config["Jwt:Issuer"],
                   audience: _config["Jwt:Issuer"],
                   claims: null,
-                  expires: keepSignIn == true ? DateTime.Now.AddHours(24) : DateTime.Now.AddMinutes(15),
+                  expires: keepSignIn ? DateTime.Now.AddHours(24) : DateTime.Now.AddMinutes(5),
                   signingCredentials: credentials);
 
                 var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
@@ -418,5 +429,33 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        private string CreateRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> refreshToken(bool KeepSignIn)
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (refreshToken == null )
+                return Unauthorized();
+
+            var newAccessToken = getToken(false);
+            var newRefreshToken = CreateRefreshToken();
+            
+            Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = KeepSignIn ? DateTime.UtcNow.AddHours(24) : DateTime.UtcNow.AddMinutes(5)
+            });
+
+            return Ok(new { accessToken = newAccessToken });
+        }
+
+        
     }
 }

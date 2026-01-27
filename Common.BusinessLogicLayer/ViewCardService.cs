@@ -19,9 +19,11 @@ namespace Common.BusinessLogicLayer
 {
     public class ViewCardService : IViewCardService
     {
+
         CommonServices commonServices = new CommonServices();
         private readonly IDAL _idal;
         private readonly IConfiguration _configuration;
+
         public ViewCardService(IDAL dAL, IConfiguration configuration)
         {
             _idal = dAL;
