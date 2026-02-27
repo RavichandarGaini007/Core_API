@@ -22,6 +22,7 @@ namespace Common.BusinessLogicLayer.Model
         public string? type { get; set; }
         public string? region { get; set; }
         public string? mis { get; set; }
+        public string? product { get; set; }
 
     }
 }
