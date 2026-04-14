@@ -913,22 +913,37 @@ namespace Common.BusinessLogicLayer
         {
             try
             {
+                var spName = "";
                 DynamicParameters queryParameters = new DynamicParameters();
-                queryParameters.Add("@Div", req.div);
-                queryParameters.Add("@desg", req.desg);
-                queryParameters.Add("@mis", req.mis);
-                queryParameters.Add("@plant", req.plant);
-                queryParameters.Add("@brand", req.brand);
-                queryParameters.Add("@product", req.product);
-                queryParameters.Add("@empCode", req.empcode);
-                queryParameters.Add("@Year", req.year);
 
-                var response = await _idal.GetDynamicResult(
-                           "proc_NetworkWise_ProductYearly_Report_Dashboard",
-                           commandType: CommandType.StoredProcedure,
-                           parameters: queryParameters,
-                           conn_str: "sap_fgrn"
-                       );
+                if (req.type != "networkWiseProductWiseNepalYearly")
+                {
+                    queryParameters.Add("@Div", req.div);
+                    queryParameters.Add("@desg", req.desg);
+                    queryParameters.Add("@mis", req.mis);
+                    queryParameters.Add("@plant", req.plant);
+                    queryParameters.Add("@brand", req.brand);
+                    queryParameters.Add("@product", req.product);
+                    queryParameters.Add("@empCode", req.empcode);
+                    queryParameters.Add("@Year", req.year);
+                    queryParameters.Add("@month", req.month);
+
+                    spName = "proc_NetworkWise_ProductYearly_Report_Dashboard";
+                }
+                else {
+                    queryParameters.Add("@Div", req.div);
+                    //queryParameters.Add("@finyear", GetFinancialYear(req.month, req.year));
+                    queryParameters.Add("@finyear", req.year);
+                    queryParameters.Add("@mis_Code", req.mis);
+
+                    spName = "proc_get_nepal_network_wise_product_yearly";
+                }
+                var response = await _idal.GetDynamicResult(spName,
+                            commandType: CommandType.StoredProcedure,
+                            parameters: queryParameters,
+                            conn_str: "sms_database"
+                        );
+                
 
                 return new ResponseModel
                 {
@@ -946,6 +961,159 @@ namespace Common.BusinessLogicLayer
                     Message = $"Error : {ex.Message}"
                 };
             }
+        }
+
+        public string GetFinancialYear(string strMonth, string strYear)
+        {
+            int month = Convert.ToInt32(strMonth);
+            int year = Convert.ToInt32(strYear);
+
+            if (month >= 4)
+            {
+                return year + "-" + (year + 1);
+            }
+            else
+            {
+                return (year - 1) + "-" + year;
+            }
+        }
+
+        public async Task<ResponseModel> getHierarchyWiseValueWiseReport(salesComReqModel req)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@div", req.div);
+                queryParameters.Add("@desg", req.desg);                
+                queryParameters.Add("@month", req.month);
+                queryParameters.Add("@year", req.year);
+                queryParameters.Add("@empcode", req.empcode);
+                var response = await _idal.GetIEnumerableData<RawData>("proc_get_network_value_emp_hierarchy", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+
+                var service = new TreeService();
+                var result = service.BuildTree((List<RawData>)response);
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = result,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            //Task<IEnumerable<UserModel>> elist =  _idal.GetIEnumerableData<UserModel>("select * from Employee", CommandType.Text, dynamicParameters, 30);
+            return responseModel;
+        }
+
+        public async Task<ResponseModel> custSalesTrendReport(salesComReqModel req)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@f_month", req.f_month);
+                queryParameters.Add("@f_year", req.f_year);
+                queryParameters.Add("@t_month", req.month);
+                queryParameters.Add("@t_year", req.year);
+                queryParameters.Add("@strdiv", req.div);
+                queryParameters.Add("@eplant", req.plant);
+                queryParameters.Add("@ehq", req.hq);
+                var response = await _idal.GetIEnumerableData<RawData>("proc_fill_customer_trend_report_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+
+                var service = new TreeService();
+                var result = service.BuildTree((List<RawData>)response);
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = result,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            return responseModel;
+        }
+
+        public async Task<ResponseModel> custSalesProductTrendReport(salesComReqModel req)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@strFinYear", req.year);
+                queryParameters.Add("@strdiv", req.div);
+                queryParameters.Add("@strType", req.type);
+                queryParameters.Add("@empcode", req.empcode);
+                var response = await _idal.GetIEnumerableData<RawData>("proc_fill_customer_prod_trend_report_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            return responseModel;
+        }
+
+        public async Task<ResponseModel> corpPerformanceReport(salesComReqModel req)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@type", req.type);
+                queryParameters.Add("@month", req.month);
+                queryParameters.Add("@year", req.year);
+                var response = await _idal.GetIEnumerableData<RawData>("proc_performance_report_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            return responseModel;
         }
 
 

@@ -398,7 +398,7 @@ namespace Login_API.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         [Route("NetworkWiseProductSale_S")]
         public async Task<ActionResult<ResponseModel>> NetworkWiseProductSale_S(salesComReqModel req)
         {
@@ -545,11 +545,47 @@ namespace Login_API.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         [Route("NetworkWiseProductYearlySale")]
         public async Task<ActionResult<ResponseModel>> NetworkWiseProductYearlySale(salesComReqModel req)
         {
             var a = await _salesServices.NetworkWiseProductYearlySale(req);
+            return Ok(a);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getHierarchyWiseValueWiseReport")]
+        public async Task<ActionResult<ResponseModel>> getHierarchyWiseValueWiseReport(salesComReqModel req)
+        {
+            var a = await _salesServices.getHierarchyWiseValueWiseReport(req);
+            return Ok(a);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("custSalesTrendReport")]
+        public async Task<ActionResult<ResponseModel>> custSalesTrendReport(salesComReqModel req)
+        {
+            var a = await _salesServices.custSalesTrendReport(req);
+            return Ok(a);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("custSalesProductTrendReport")]
+        public async Task<ActionResult<ResponseModel>> custSalesProductTrendReport(salesComReqModel req)
+        {
+            var a = await _salesServices.custSalesProductTrendReport(req);
+            return Ok(a);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("corpPerformanceReport")]
+        public async Task<ActionResult<ResponseModel>> corpPerformanceReport(salesComReqModel req)
+        {
+            var a = await _salesServices.corpPerformanceReport(req);
             return Ok(a);
         }
 

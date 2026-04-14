@@ -8,9 +8,9 @@ namespace Common.BusinessLogicLayer.Model
 {
     public class salesComReqModel
     {
-        public string tbl_name { get; set; }
-        public string empcode { get; set; }
-        public string div { get; set; }
+        public string? tbl_name { get; set; }
+        public string? empcode { get; set; }
+        public string? div { get; set; }
         public string? month { get; set; }
         public string? year { get; set; }
         public string? flag { get; set; }
@@ -23,6 +23,8 @@ namespace Common.BusinessLogicLayer.Model
         public string? region { get; set; }
         public string? mis { get; set; }
         public string? product { get; set; }
+        public string? f_month { get; set; }
+        public string? f_year { get; set ; }
 
     }
 }

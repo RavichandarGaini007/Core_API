@@ -39,5 +39,10 @@ namespace Common.BusinessLogicLayer.IServices
 
         public Task<ResponseModel> getSalesGroupDivData(salesComReqModel req);
         public Task<ResponseModel> NetworkWiseProductYearlySale(salesComReqModel req);
+        public Task<ResponseModel> getHierarchyWiseValueWiseReport(salesComReqModel req);
+        public Task<ResponseModel> custSalesTrendReport(salesComReqModel req);
+        public Task<ResponseModel> custSalesProductTrendReport(salesComReqModel req);
+
+        public Task<ResponseModel> corpPerformanceReport(salesComReqModel req);
     }
 }
