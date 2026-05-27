@@ -33,7 +33,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@eplant", req.plant);
                 queryParameters.Add("@ehq", req.hq);
                 queryParameters.Add("@empcode", req.empcode);
-                var response = await _idal.GetIEnumerableData<saleModel>("Proc_Sales_Portal_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<saleModel>("Proc_Sales_Portal_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -69,7 +69,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@year", req.year);
                 queryParameters.Add("@flag", req.flag);
 
-                var response = await _idal.GetIEnumerableData<SalesMQYModel>("proc_sales_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<SalesMQYModel>("proc_sales_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -99,7 +99,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@empcode", req.empcode);
                 queryParameters.Add("@div", req.div);
 
-                var response = await _idal.GetIEnumerableData<salesAllDivWdgsRes>("proc_sales_allDiv_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<salesAllDivWdgsRes>("proc_sales_allDiv_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -130,7 +130,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@div", req.div);
                 queryParameters.Add("@flag", req.flag);
 
-                var response = await _idal.GetIEnumerableData<salesTopPerfmceRes>("proc_top_performance_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<salesTopPerfmceRes>("proc_top_performance_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -164,7 +164,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@desg", req.desg);
                 queryParameters.Add("@ename", req.ename);
 
-                var response = await _idal.GetIEnumerableData<salesHierarchyRes>("proc_HierarchyWise_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<salesHierarchyRes>("proc_HierarchyWise_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -196,7 +196,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@month", req.month);
                 queryParameters.Add("@year", req.year);
 
-                var response = await _idal.GetIEnumerableData<salesDivHqRes>("Proc_div_hq_data_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<salesDivHqRes>("Proc_div_hq_data_Dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -229,7 +229,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@year", req.year);
                 queryParameters.Add("@hq", req.hq);
 
-                var flatData = await _idal.GetIEnumerableData<salesScoreCardRes>("Proc_score_card_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var flatData = await _idal.GetIEnumerableData<salesScoreCardRes>("Proc_score_card_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 var response = flatData
                 .GroupBy(x => x.BrandRow)
@@ -304,7 +304,7 @@ namespace Common.BusinessLogicLayer
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@empcode", EmpCode);
 
-                var response = await _idal.GetIEnumerableData<empAllDesgRes>("proc_get_emp_wise_desg", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<empAllDesgRes>("proc_get_emp_wise_desg", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -331,7 +331,7 @@ namespace Common.BusinessLogicLayer
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@empcode", EmpCode);
 
-                var response = await _idal.GetIEnumerableData<salesDivRes>("proc_fillDiv_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<salesDivRes>("proc_fillDiv_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -360,7 +360,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@empcode", req.empcode);
                 queryParameters.Add("@div", req.div);
 
-                var response = await _idal.GetIEnumerableData<brandPerformanceRes>("proc_brand_performance_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<brandPerformanceRes>("proc_brand_performance_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -398,7 +398,7 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@mis", req.mis);
                 queryParameters.Add("@ename", req.ename);
 
-                var response = await _idal.GetIEnumerableData<sales_popup_Hqwiseres>("proc_Div_Hq_popSale_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+                var response = await _idal.GetIEnumerableData<sales_popup_Hqwiseres>("proc_Div_Hq_popSale_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database", 600);
 
                 return new ResponseModel
                 {
@@ -837,7 +837,7 @@ namespace Common.BusinessLogicLayer
             try
             {
                 string spname = req.type == "quarterwise" ? "NetworkWiseProductSale_Qtr_S" : "NetworkWiseProductSale_S";
-                
+
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@div", req.div);
                 queryParameters.Add("@desg", req.desg);
@@ -930,7 +930,8 @@ namespace Common.BusinessLogicLayer
 
                     spName = "proc_NetworkWise_ProductYearly_Report_Dashboard";
                 }
-                else {
+                else
+                {
                     queryParameters.Add("@Div", req.div);
                     //queryParameters.Add("@finyear", GetFinancialYear(req.month, req.year));
                     queryParameters.Add("@finyear", req.year);
@@ -943,7 +944,7 @@ namespace Common.BusinessLogicLayer
                             parameters: queryParameters,
                             conn_str: "sms_database"
                         );
-                
+
 
                 return new ResponseModel
                 {
@@ -984,7 +985,7 @@ namespace Common.BusinessLogicLayer
             {
                 DynamicParameters queryParameters = new DynamicParameters();
                 queryParameters.Add("@div", req.div);
-                queryParameters.Add("@desg", req.desg);                
+                queryParameters.Add("@desg", req.desg);
                 queryParameters.Add("@month", req.month);
                 queryParameters.Add("@year", req.year);
                 queryParameters.Add("@empcode", req.empcode);
@@ -1027,15 +1028,18 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@strdiv", req.div);
                 queryParameters.Add("@eplant", req.plant);
                 queryParameters.Add("@ehq", req.hq);
-                var response = await _idal.GetIEnumerableData<RawData>("proc_fill_customer_trend_report_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
 
-                var service = new TreeService();
-                var result = service.BuildTree((List<RawData>)response);
+                var response = await _idal.GetDynamicResult(
+                           "proc_fill_customer_trend_report_dashboard",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
 
                 return new ResponseModel
                 {
                     Code = 1,
-                    Data = result,
+                    Data = response,
                     Message = "Success"
                 };
             }
@@ -1062,7 +1066,13 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@strdiv", req.div);
                 queryParameters.Add("@strType", req.type);
                 queryParameters.Add("@empcode", req.empcode);
-                var response = await _idal.GetIEnumerableData<RawData>("proc_fill_customer_prod_trend_report_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+
+                var response = await _idal.GetDynamicResult(
+                           "proc_fill_customer_prod_trend_report_dashboard",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
 
                 return new ResponseModel
                 {
@@ -1093,7 +1103,94 @@ namespace Common.BusinessLogicLayer
                 queryParameters.Add("@type", req.type);
                 queryParameters.Add("@month", req.month);
                 queryParameters.Add("@year", req.year);
-                var response = await _idal.GetIEnumerableData<RawData>("proc_performance_report_dashboard", commandType: System.Data.CommandType.StoredProcedure, parameters: queryParameters, conn_str: "sms_database");
+
+                var response = await _idal.GetDynamicResult(
+                           "proc_performance_report_dashboard",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            return responseModel;
+        }
+
+        public async Task<ResponseModel> GlanceReport(salesComReqModel req)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@empCode", req.empcode);
+                queryParameters.Add("@Div", req.div);
+                queryParameters.Add("@desg", req.desg);
+                queryParameters.Add("@mis", req.mis);
+                queryParameters.Add("@Year", req.year);
+                queryParameters.Add("@type", req.type);
+
+                var response = await _idal.GetDynamicResult(
+                           "proc_fill_glance_report_dashboard",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+            ResponseModel responseModel = new ResponseModel();
+
+            return responseModel;
+        }
+
+        public async Task<ResponseModel> DispensaryReport(salesComReqModel req)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@empCode", req.empcode);
+                queryParameters.Add("@type", req.type);
+                queryParameters.Add("@Div", req.div);
+                queryParameters.Add("@brand", req.brand);
+                queryParameters.Add("@product", req.product);
+                queryParameters.Add("@Year", req.year);
+
+
+                var response = await _idal.GetDynamicResult(
+                           "proc_dispensary_report_dashboard",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "sms_database"
+                       );
 
                 return new ResponseModel
                 {

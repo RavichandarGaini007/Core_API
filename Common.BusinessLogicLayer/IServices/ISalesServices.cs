@@ -44,5 +44,7 @@ namespace Common.BusinessLogicLayer.IServices
         public Task<ResponseModel> custSalesProductTrendReport(salesComReqModel req);
 
         public Task<ResponseModel> corpPerformanceReport(salesComReqModel req);
+        public Task<ResponseModel> GlanceReport(salesComReqModel req);
+        public Task<ResponseModel> DispensaryReport(salesComReqModel req);
     }
 }

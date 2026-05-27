@@ -167,6 +167,7 @@ namespace Common.DataAccessLayer
             using (var command = new SqlCommand(storedProcName, conn))
             {
                 command.CommandType = commandType;
+                command.CommandTimeout = 300;
 
                 foreach (var paramName in parameters.ParameterNames)
                 {

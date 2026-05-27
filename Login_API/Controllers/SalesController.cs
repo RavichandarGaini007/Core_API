@@ -378,6 +378,16 @@ namespace Login_API.Controllers
             return Ok(Convert.ToString(enclodeval));
         }
 
+        //[Authorize]
+        [HttpGet("GetDecryptAndEncodeVal")]
+        public async Task<IActionResult> GetDecryptAndEncodeVal(string value, string key)
+        {
+            encryption_webSoapClient ws_login = new encryption_webSoapClient(encryption_webSoapClient.EndpointConfiguration.encryption_webSoap);
+            var Result = await ws_login.DecryptAsync(value, key);
+            var enclodeval = HttpUtility.UrlEncode(Result);
+            return Ok(new { decryptEmail = Convert.ToString(enclodeval) });
+        }
+
         [Authorize]
         [HttpGet]
         [Route("GetDesGetDesgEmp")]
@@ -586,6 +596,24 @@ namespace Login_API.Controllers
         public async Task<ActionResult<ResponseModel>> corpPerformanceReport(salesComReqModel req)
         {
             var a = await _salesServices.corpPerformanceReport(req);
+            return Ok(a);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("GlanceReport")]
+        public async Task<ActionResult<ResponseModel>> GlanceReport(salesComReqModel req)
+        {
+            var a = await _salesServices.GlanceReport(req);
+            return Ok(a);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("DispensaryReport")]
+        public async Task<ActionResult<ResponseModel>> DispensaryReport(salesComReqModel req)
+        {
+            var a = await _salesServices.DispensaryReport(req);
             return Ok(a);
         }
 
