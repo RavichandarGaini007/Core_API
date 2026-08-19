@@ -96,5 +96,22 @@ namespace Login_API.Controllers
             var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
+
+
+        [HttpGet]
+        [Route("empPendAckCount")]
+        public async Task<ActionResult<ResponseModel>> empPendAckCount(string fromDt, string toDt, string userid, [FromHeader(Name = "X-API-ID")] string apiId, [FromHeader(Name = "X-API-PASSWORD")] string apiPassword)
+        {
+            var configuredApiId = _config["ApiCredentials:ApiId"];
+            var configuredApiPassword = _config["ApiCredentials:ApiPassword"];
+
+            if (apiId != configuredApiId || apiPassword != configuredApiPassword)
+            {
+                return Unauthorized("Invalid API ID or Password");
+            }
+            var a = await _comServices.empPendAckCount(fromDt, toDt, userid);
+            return Ok(a);
+        }
+
     }
 }

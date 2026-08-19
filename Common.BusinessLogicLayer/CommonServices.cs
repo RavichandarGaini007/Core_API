@@ -171,5 +171,41 @@ namespace Common.BusinessLogicLayer
 
             return table;
         }
+
+
+        public async Task<ResponseModel> empPendAckCount(string fromDt, string toDt, string userid)
+        {
+            try
+            {
+                DynamicParameters queryParameters = new DynamicParameters();
+                queryParameters.Add("@fromDate", fromDt);
+                queryParameters.Add("@toDate", toDt);
+                queryParameters.Add("@userid", userid);
+
+                var response = await _idal.GetDynamicResult(
+                           "Sp_EmployeePendingAcknowledgementCount",
+                           commandType: CommandType.StoredProcedure,
+                           parameters: queryParameters,
+                           conn_str: "demand_64"
+                       );
+
+                return new ResponseModel
+                {
+                    Code = 1,
+                    Data = response,
+                    Message = "Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 0,
+                    Data = new ExceptionResponse { ErrorMessage = $"Error occured while fetching data : {ex.Message}" },
+                    Message = $"Error : {ex.Message}"
+                };
+            }
+        }
+
     }
 }

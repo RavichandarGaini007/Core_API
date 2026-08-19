@@ -42,6 +42,8 @@ namespace Common.DataAccessLayer
                 connectionString = _configuration.GetSection("ConnectionStrings:sap_fgrn_Connection_64").Value;
             else if (db_name.ToLower() == "lottery")
                 connectionString = _configuration.GetSection("ConnectionStrings:lottery_Connection").Value;
+            else if (db_name.ToLower() == "demand_64")
+                connectionString = _configuration.GetSection("ConnectionStrings:demand_64").Value;
             else
                 connectionString = _configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
 

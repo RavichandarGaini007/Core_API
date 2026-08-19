@@ -1,0 +1,44 @@
+[33mb43d1b0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m0aeb9a9[m HEAD@{1}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m0aeb9a9[m HEAD@{2}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m0aeb9a9[m HEAD@{3}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m0aeb9a9[m HEAD@{4}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m0aeb9a9[m HEAD@{5}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m0aeb9a9[m HEAD@{6}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33me1a2dd0[m HEAD@{7}: reset: moving to e1a2dd0a94d52eb171d909ab71108326f610c3e1
+[33m580bdc2[m HEAD@{8}: reset: moving to 580bdc240d158ed9065f774a6b23e7e005b6c908
+[33m580bdc2[m HEAD@{9}: reset: moving to 580bdc240d158ed9065f774a6b23e7e005b6c908
+[33m580bdc2[m HEAD@{10}: revert: Reapply "chatbot changes"
+[33me1a2dd0[m HEAD@{11}: revert: Revert "chatbot changes"
+[33m0aeb9a9[m HEAD@{12}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m0aeb9a9[m HEAD@{13}: reset: moving to 0aeb9a99578513b62179a0699ed4664f26028ef3
+[33m67f058e[m HEAD@{14}: reset: moving to 67f058e4ac9c90fb0424aebe85ae962ee48247d7
+[33m67f058e[m HEAD@{15}: reset: moving to 67f058e4ac9c90fb0424aebe85ae962ee48247d7
+[33md80646c[m HEAD@{16}: reset: moving to d80646c781f137f7f9092865a8b6df88d110862f
+[33md80646c[m HEAD@{17}: revert: Revert "chatbot changes with protection"
+[33m67f058e[m HEAD@{18}: reset: moving to 67f058e4ac9c90fb0424aebe85ae962ee48247d7
+[33med4f56e[m HEAD@{19}: commit: without key bot
+[33m67f058e[m HEAD@{20}: commit: chatbot changes with protection
+[33m0aeb9a9[m HEAD@{21}: commit: chatbot changes
+[33mb43d1b0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{22}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: Fast-forward
+[33m80b1a4b[m HEAD@{23}: commit: Report Changes
+[33m578be80[m HEAD@{24}: commit: report changes
+[33m760b4a4[m HEAD@{25}: commit: token and fgrn entry changes
+[33m76747ad[m HEAD@{26}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: Fast-forward
+[33mf245771[m HEAD@{27}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: Merge made by the 'ort' strategy.
+[33m5544b8d[m HEAD@{28}: commit: removed spaces
+[33m33918d1[m HEAD@{29}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: updating HEAD
+[33m33918d1[m HEAD@{30}: checkout: moving from master to master
+[33m33918d1[m HEAD@{31}: commit: div group working
+[33m46046ac[m HEAD@{32}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: Fast-forward
+[33m9e99a9f[m HEAD@{33}: pull --progress --no-edit --no-stat --recurse-submodules=no origin: Fast-forward
+[33mfdc2cb7[m HEAD@{34}: checkout: moving from master to master
+[33mfdc2cb7[m HEAD@{35}: commit: timeout increased
+[33m263006e[m HEAD@{36}: commit: token based authontication done in sales portal api
+[33mcfc0d11[m HEAD@{37}: commit: Working With React
+[33mf89bed8[m HEAD@{38}: commit: proceed
+[33m1031a0d[m HEAD@{39}: commit: Commit
+[33m60fa50a[m HEAD@{40}: commit: changes for QR code scanning
+[33mcaa0bce[m HEAD@{41}: commit: submit
+[33m6d5c8ba[m HEAD@{42}: commit: TEST
+[33mfdbddbb[m HEAD@{43}: clone: from https://github.com/AmolDingankar/Login_API
