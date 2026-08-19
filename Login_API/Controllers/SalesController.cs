@@ -25,11 +25,13 @@ namespace Login_API.Controllers
     {
 
         private readonly ISalesServices _salesServices;
+        private readonly IChatbotService _chatbot;
         private IConfiguration _config;
-        public SalesController(ISalesServices salesServices, IConfiguration config)
+        public SalesController(ISalesServices salesServices, IChatbotService chatbot, IConfiguration config)
         {
             _salesServices = salesServices;
             _config = config;
+            _chatbot = chatbot;
         }
 
         [Authorize]
@@ -617,5 +619,12 @@ namespace Login_API.Controllers
             return Ok(a);
         }
 
+        [HttpPost]
+        [Route("GetChatBotReq")]
+        public async Task<ActionResult<ResponseModel>> GetChatBotReq(ChatbotReq req)
+        {
+            var a = await _chatbot.GenerateSqlAsync(req);
+            return Ok(a);
+        }
     }
 }
