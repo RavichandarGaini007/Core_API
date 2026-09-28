@@ -2,6 +2,7 @@
 using Common.BusinessLogicLayer.IServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Common.BusinessLogicLayer
     {
         public static IServiceCollection AddDBL(this IServiceCollection services, IConfiguration Configuration)
         {
+            services.AddHttpClient<IChatbotService, ChatbotService>();
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IRPLServices, RPLServices>();
             services.AddTransient<IPurchaseSaleService, PurchaseSaleService>();

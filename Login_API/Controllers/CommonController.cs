@@ -1,14 +1,19 @@
 ﻿using Common.BusinessLogicLayer;
+using Common.BusinessLogicLayer.IServices;
 using Common.BusinessLogicLayer.Model;
+using Login_API.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Text;
-using Common.BusinessLogicLayer.IServices;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Security.Principal;
+using System.Text;
 
 
 namespace Login_API.Controllers
@@ -97,10 +102,31 @@ namespace Login_API.Controllers
             return Convert.ToBase64String(hash);
         }
 
+        private string GenerateAccessToken(string userId)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim("type", "access")
+            };
 
-        [HttpGet]
-        [Route("empPendAckCount")]
-        public async Task<ActionResult<ResponseModel>> empPendAckCount(string fromDt, string toDt, string userid, [FromHeader(Name = "X-API-ID")] string apiId, [FromHeader(Name = "X-API-PASSWORD")] string apiPassword)
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_config["Jwt:Key"])
+            );
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Issuer"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(10),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        [HttpPost("gentoken")]
+        public IActionResult Refresh([FromHeader(Name = "X-API-ID")] string apiId, [FromHeader(Name = "X-API-PASSWORD")] string apiPassword)
         {
             var configuredApiId = _config["ApiCredentials:ApiId"];
             var configuredApiPassword = _config["ApiCredentials:ApiPassword"];
@@ -109,7 +135,61 @@ namespace Login_API.Controllers
             {
                 return Unauthorized("Invalid API ID or Password");
             }
-            var a = await _comServices.empPendAckCount(fromDt, toDt, userid);
+
+            var token = GenerateAccessToken("00160151");
+
+            return Ok(new { accessToken = token });
+        }
+
+        //[Authorize]
+        [HttpGet]
+        [Route("empPendAckCount")]
+        public async Task<ActionResult<ResponseModel>> empPendAckCount(string ?userid)
+        {
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                return Unauthorized();
+
+            var accessToken = authHeader["Bearer ".Length..].Trim();
+
+            var handler = new JwtSecurityTokenHandler();
+            ClaimsPrincipal principal;
+
+            try
+            {
+                principal = handler.ValidateToken(
+                    accessToken,
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidIssuer = _config["Jwt:Issuer"],
+                        ValidAudience = _config["Jwt:Audience"], // separate config key
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(_config["Jwt:Key"])),
+                        ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+                        ClockSkew = TimeSpan.FromSeconds(150) // tighten default 5-min skew if desired
+                    },
+                    out _
+                );
+            }
+            catch (SecurityTokenException)
+            {
+                return Unauthorized();
+            }
+            catch (ArgumentException)
+            {
+                return Unauthorized();
+            }
+
+            // Require an ACCESS token here, not a refresh token
+            var tokenType = principal.FindFirst("type")?.Value;
+            if (tokenType != "access")
+                return Unauthorized();
+
+            var a = await _comServices.empPendAckCount(userid);
+
             return Ok(a);
         }
 

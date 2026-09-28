@@ -173,13 +173,11 @@ namespace Common.BusinessLogicLayer
         }
 
 
-        public async Task<ResponseModel> empPendAckCount(string fromDt, string toDt, string userid)
+        public async Task<ResponseModel> empPendAckCount(string userid)
         {
             try
             {
                 DynamicParameters queryParameters = new DynamicParameters();
-                queryParameters.Add("@fromDate", fromDt);
-                queryParameters.Add("@toDate", toDt);
                 queryParameters.Add("@userid", userid);
 
                 var response = await _idal.GetDynamicResult(

@@ -10,7 +10,7 @@ namespace Common.BusinessLogicLayer.IServices
     public interface ICommonServices
     {
         public Task<ResponseModel> fgrnEntry(fgrnReqModel req, string uname, string pass);
-        public Task<ResponseModel> empPendAckCount(string fromDt, string toDt, string userid);
+        public Task<ResponseModel> empPendAckCount(string userid);
 
     }
 }

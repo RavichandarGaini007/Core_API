@@ -11,7 +11,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-builder.Configuration.AddJsonFile($"appsettings.Dev.json", optional: true);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
 builder.Configuration.AddEnvironmentVariables().Build();
 
 // Add services to the container.
@@ -83,7 +83,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000") // 👈 EXACT origin
+            .WithOrigins(
+                "http://localhost:3000",// 👈 EXACT origin
+                "https://alkemcrm.com"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials(); // 👈 REQUIRED
