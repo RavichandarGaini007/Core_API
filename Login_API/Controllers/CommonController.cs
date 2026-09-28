@@ -144,7 +144,7 @@ namespace Login_API.Controllers
         //[Authorize]
         [HttpGet]
         [Route("empPendAckCount")]
-        public async Task<ActionResult<ResponseModel>> empPendAckCount(string ?userid)
+        public async Task<ActionResult<ResponseModel>> empPendAckCount()
         {
             var authHeader = Request.Headers["Authorization"].ToString();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
@@ -188,10 +188,61 @@ namespace Login_API.Controllers
             if (tokenType != "access")
                 return Unauthorized();
 
-            var a = await _comServices.empPendAckCount(userid);
+            var a = await _comServices.empPendAckCount();
 
             return Ok(a);
         }
 
+
+        [HttpGet]
+        [Route("empCompAckCount")]
+        public async Task<ActionResult<ResponseModel>> empCompAckCount()
+        {
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                return Unauthorized();
+
+            var accessToken = authHeader["Bearer ".Length..].Trim();
+
+            var handler = new JwtSecurityTokenHandler();
+            ClaimsPrincipal principal;
+
+            try
+            {
+                principal = handler.ValidateToken(
+                    accessToken,
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidIssuer = _config["Jwt:Issuer"],
+                        ValidAudience = _config["Jwt:Audience"], // separate config key
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(_config["Jwt:Key"])),
+                        ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+                        ClockSkew = TimeSpan.FromSeconds(150) // tighten default 5-min skew if desired
+                    },
+                    out _
+                );
+            }
+            catch (SecurityTokenException)
+            {
+                return Unauthorized();
+            }
+            catch (ArgumentException)
+            {
+                return Unauthorized();
+            }
+
+            // Require an ACCESS token here, not a refresh token
+            var tokenType = principal.FindFirst("type")?.Value;
+            if (tokenType != "access")
+                return Unauthorized();
+
+            var a = await _comServices.empCompAckCount();
+
+            return Ok(a);
+        }
     }
 }
